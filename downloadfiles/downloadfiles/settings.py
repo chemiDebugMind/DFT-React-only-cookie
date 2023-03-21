@@ -50,7 +50,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'corsheaders.middleware.CorsMiddleware'
+    "corsheaders.middleware.CorsMiddleware",
+    "django.middleware.common.CommonMiddleware",
 ]
 
 ROOT_URLCONF = 'downloadfiles.urls'
@@ -132,11 +133,24 @@ CORS_ALLOWED_ORIGINS = [
 ]
 
 CORS_ALLOW_CREDENTIALS = True
+CSRF_COOKIE_SECURE = True
+CSRF_COOKIE_HTTP_ONLY = True
+CSRF_TRUSTED_ORIGINS = [
+    "http://127.0.0.1:5173",
+
+]
+CORS_EXPOSE_HEADERS = ["Content-Type", "X-CSRFToken"]
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SAMESITE = "None"
+SESSION_COOKIE_SAMESITE = "None"
 
 REST_FRAMEWORK = {
-  'DEFAULT_AUTHENTICATION_CLASSES': (
+  'DEFAULT_AUTHENTICATION_CLASSES': [
       'download.authenticate.CustomAuthentication',
-  ),
+  ],
+    "DEFAULT_PERMISSION_CLASSES": [
+        'rest_framework.permissions.AllowAny',
+    ]
 }
 
 from datetime import timedelta
@@ -161,6 +175,7 @@ SIMPLE_JWT = {
 
   'AUTH_TOKEN_CLASSES': ('rest_framework_simplejwt.tokens.AccessToken',),
   'TOKEN_TYPE_CLAIM': 'token_type',
+  'TOKEN_USER_CLASS': 'rest_framework_simplejwt.models.TokenUser',
 
   'JTI_CLAIM': 'jti',
 
@@ -169,7 +184,7 @@ SIMPLE_JWT = {
   'SLIDING_TOKEN_REFRESH_LIFETIME': timedelta(days=1),
 
   # custom
-  'AUTH_COOKIE': 'access_token',  # Cookie name. Enables cookies if value is set.
+  'AUTH_COOKIE': 'access',  # Cookie name. Enables cookies if value is set.
   'AUTH_COOKIE_REFRESH': 'refresh',
   'AUTH_COOKIE_DOMAIN': None,     # A string like "example.com", or None for standard domain cookie.
   'AUTH_COOKIE_SECURE': False,    # Whether the auth cookies should be secure (https:// only).

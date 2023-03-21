@@ -18,7 +18,7 @@ const router = createBrowserRouter([
     element: <App />,
     children:[   
       {
-        path:'/',
+        path:'/download',
         element: <Download />
       },
       {
