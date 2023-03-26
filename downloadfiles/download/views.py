@@ -1,17 +1,23 @@
 from django.shortcuts import render
 from rest_framework import exceptions as rest_exceptions, response, decorators as rest_decorators, permissions as rest_permissions
-# Create your views here.
-
 from rest_framework_simplejwt import tokens, views as jwt_views, serializers as jwt_serializers, exceptions as jwt_exceptions
-
 from django.contrib.auth.models import User
-# cookieapp/views.py
 from django.middleware import csrf
 from rest_framework.views import APIView
 from django.contrib.auth import authenticate
 from django.conf import settings
 from rest_framework import status
 from .serializer import LoginSerializer, RegistrationSerializer, AccountSerializer
+import os
+from django.http import HttpResponse, JsonResponse
+import threading
+import zipfile
+import requests
+import socket
+from rest_framework.response import Response
+import base64
+from django.conf import settings as django_settings
+from django.core.files.storage import default_storage
 
 
 def get_tokens_for_user(user):
@@ -133,3 +139,39 @@ class CookieTokenRefreshView(jwt_views.TokenRefreshView):
             del response.data["refresh"]
         response["X-CSRFToken"] = request.COOKIES.get("csrftoken")
         return super().finalize_response(request, response, *args, **kwargs)
+    
+
+@rest_decorators.api_view(["POST"])
+@rest_decorators.permission_classes([rest_permissions.IsAuthenticated])
+def download(request):
+    if request.method == 'POST':
+        input_url = request.data.get('urls')
+        urls = input_url.split(',')
+        threads = []
+        download_folder = 'media'
+        os.makedirs(download_folder, exist_ok=True)
+        domain_url = request.scheme + "://" + request.get_host()
+        file_paths = {}
+        for url in urls:
+            thread = threading.Thread(target=download_file, args=(url, download_folder,file_paths,domain_url))
+            threads.append(thread)
+            thread.start()
+
+        for thread in threads:
+            thread.join()
+        
+        return JsonResponse(file_paths, status=status.HTTP_200_OK)
+        
+    else:
+        return JsonResponse("Something went wrong!", status=status.HTTP_404_NOT_FOUND)
+
+
+def download_file(url, download_folder,file_paths,domain_url):
+    response = requests.get(url,stream=True)
+    file_name = os.path.basename(url)
+    file_path = os.path.join(download_folder, file_name)
+    with open(file_path, 'wb') as f:
+        for data in response.iter_content(1024):
+            f.write(data)
+    file_paths[file_name] = domain_url + settings.MEDIA_URL +  file_name
+    return file_name

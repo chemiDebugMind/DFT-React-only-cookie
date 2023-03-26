@@ -5,9 +5,11 @@ import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import CloudDownloadIcon from '@mui/icons-material/CloudDownload';
 import { Box } from '@mui/material';
+import AuthContext from '../store/auth-context';
+import { useContext } from 'react';
 
 function Navbar() {
-
+  const { user } = useContext(AuthContext);
   return (
     <div >
       <AppBar position="static" sx={{ backgroundColor:"black", flexGrow:1}}>
@@ -30,11 +32,12 @@ function Navbar() {
                 </RouterLink>
             </Typography>
             </Box>
-          <Button color="inherit">
-            <RouterLink to="/register" >
-              Sign Up
-            </RouterLink>
-          </Button>
+              <Button color="inherit">
+                <RouterLink to="/register" >
+                Sign Up
+                </RouterLink>
+            
+              </Button>
         </Toolbar>
       </AppBar>
     </div>
