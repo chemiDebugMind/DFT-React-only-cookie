@@ -11,6 +11,7 @@ djangorestframework-simplejwt = "*"
 threaded = "*"
 requests = "*"
 django-dump-die = "*"
+gunicorn = "*"
 
 [dev-packages]
 
