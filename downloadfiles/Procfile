@@ -1,1 +1,1 @@
-web: downloadfiles.wsgi --log-file -
+web: gunicorn downloadfiles.wsgi --log-file -
