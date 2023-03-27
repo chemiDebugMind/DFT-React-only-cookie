@@ -12,6 +12,7 @@ threaded = "*"
 requests = "*"
 django-dump-die = "*"
 gunicorn = "*"
+whitenoise = "*"
 
 [dev-packages]
 
