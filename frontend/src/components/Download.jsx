@@ -11,7 +11,7 @@ const Download = () => {
   const logout = useLogout()
   const navigate = useNavigate()
   const axiosPrivateInstance = useAxiosPrivate()
-  const [urls, setUrls] = useState(null);
+  const [urls, setUrls] = useState('');
   const [downloadLinks, setDownloadLinks] = useState([]);
   const [submitting, setSubmitting] = useState(false);
   // async function onLogout() {
