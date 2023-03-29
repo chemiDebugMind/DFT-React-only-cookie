@@ -11,6 +11,8 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 """
 
 from pathlib import Path
+import os
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -62,7 +64,6 @@ ROOT_URLCONF = 'downloadfiles.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -119,12 +120,15 @@ USE_I18N = True
 
 USE_TZ = True
 
-import os
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
-STATIC_URL = 'static/'
-STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
+INTERNAL_IPS = ['127.0.0.1']
+
+VITE_APP_DIR = BASE_DIR / "src"
+
+STATIC_URL = '/static/'
+STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static'),os.path.join(BASE_DIR,f"{VITE_APP_DIR}/dist")]
 STATIC_ROOT =os.path.join(BASE_DIR, 'staticfiles')
 
 MEDIA_ROOT  = os.path.join(BASE_DIR, 'media')
@@ -137,14 +141,14 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
 CORS_ALLOWED_ORIGINS = [
-    "https://dft-react-only-cookie.vercel.app",
+    "http://127.0.0.1:8000",
 ]
 
 CORS_ALLOW_CREDENTIALS = True
 CSRF_COOKIE_SECURE = True
 CSRF_COOKIE_HTTP_ONLY = True
 CSRF_TRUSTED_ORIGINS = [
-    "https://dft-react-only-cookie.vercel.app",
+    "http://127.0.0.1:8000",
 
 ]
 CORS_EXPOSE_HEADERS = ["Content-Type", "X-CSRFToken"]
@@ -194,9 +198,9 @@ SIMPLE_JWT = {
   # custom
   'AUTH_COOKIE': 'access',  # Cookie name. Enables cookies if value is set.
   'AUTH_COOKIE_REFRESH': 'refresh',
-  'AUTH_COOKIE_DOMAIN': 'https://dft-react-only-cookie.vercel.app/',     # A string like "example.com", or None for standard domain cookie.
+  'AUTH_COOKIE_DOMAIN': 'None',     # A string like "example.com", or None for standard domain cookie.
   'AUTH_COOKIE_SECURE': False,    # Whether the auth cookies should be secure (https:// only).
   'AUTH_COOKIE_HTTP_ONLY' : True, # Http only cookie flag.It's not fetch by javascript.
   'AUTH_COOKIE_PATH': '/',        # The path of the auth cookie.
-  'AUTH_COOKIE_SAMESITE': 'None',  # Whether to set the flag restricting cookie leaks on cross-site requests. This can be 'Lax', 'Strict', or None to disable the flag.
+  'AUTH_COOKIE_SAMESITE': 'Lax',  # Whether to set the flag restricting cookie leaks on cross-site requests. This can be 'Lax', 'Strict', or None to disable the flag.
 }
