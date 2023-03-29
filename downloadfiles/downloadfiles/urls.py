@@ -23,9 +23,6 @@ from django.views.generic import TemplateView
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('download.urls')),
-    # re_path(r"^static/(?P<path>.*)$", serve, {"document_root": settings.STATIC_ROOT}),
-    re_path(
-        '',
-        TemplateView.as_view(template_name="base.html"),
-    )
+    path('',TemplateView.as_view(template_name="base.html"))
+  
 ]

@@ -64,6 +64,7 @@ ROOT_URLCONF = 'downloadfiles.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'DIRS': [BASE_DIR/ "html"],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -123,13 +124,19 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
-INTERNAL_IPS = ['127.0.0.1']
 
-VITE_APP_DIR = BASE_DIR / "src"
+
+# STATIC_URL = '/static/'
+# STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static'),os.path.join(BASE_DIR,"dist")]
+# STATIC_ROOT =os.path.join(BASE_DIR, 'staticfiles')
 
 STATIC_URL = '/static/'
-STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static'),os.path.join(BASE_DIR,f"{VITE_APP_DIR}/dist")]
-STATIC_ROOT =os.path.join(BASE_DIR, 'staticfiles')
+STATICFILES_DIRS = [
+BASE_DIR / "dist",
+BASE_DIR / "public",
+]
+STATIC_ROOT = BASE_DIR / "static"
+
 
 MEDIA_ROOT  = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
@@ -204,3 +211,9 @@ SIMPLE_JWT = {
   'AUTH_COOKIE_PATH': '/',        # The path of the auth cookie.
   'AUTH_COOKIE_SAMESITE': 'Lax',  # Whether to set the flag restricting cookie leaks on cross-site requests. This can be 'Lax', 'Strict', or None to disable the flag.
 }
+
+
+INTERNAL_IPS = [
+    'localhost',
+    '127.0.0.1'
+]
