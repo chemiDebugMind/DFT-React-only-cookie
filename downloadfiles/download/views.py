@@ -159,7 +159,6 @@ def download(request):
 
         for thread in threads:
             thread.join()
-        
         return JsonResponse(file_paths, status=status.HTTP_200_OK)
         
     else:
@@ -173,5 +172,5 @@ def download_file(url, download_folder,file_paths,domain_url):
     with open(file_path, 'wb') as f:
         for data in response.iter_content(1024):
             f.write(data)
-    file_paths[file_name] = domain_url + settings.MEDIA_URL +  file_name
+    file_paths[file_name] = domain_url + '/url' + settings.MEDIA_URL +  file_name
     return file_name

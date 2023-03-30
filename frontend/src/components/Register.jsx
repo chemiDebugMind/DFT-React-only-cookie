@@ -6,13 +6,14 @@ import TextField from '@mui/material/TextField';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
 import Link from '@mui/material/Link';
-import { Link as RouterLink } from 'react-router-dom';
+import { Link as RouterLink, useNavigate} from 'react-router-dom';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { axiosInstance } from '../axios';
 
 function Copyright(props) {
   return (
@@ -30,13 +31,31 @@ function Copyright(props) {
 const theme = createTheme();
 
 export default function Register() {
-  const handleSubmit = (event) => {
+  const navigate = useNavigate()
+  const handleSubmit = async (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get('email'),
-      password: data.get('password'),
-    });
+    const username = data.get('username')
+    const email = data.get('email')
+    const password = data.get('password')
+    const password2 = data.get('password2')
+
+    try {
+      const response = await axiosInstance.post('register/',
+      {
+        username,
+        email,
+        password,
+        password2
+      });
+      console.log(response)
+      navigate('/login')
+    } catch (error) {
+      console.log(error);
+      
+    }
+
+
   };
 
   return (
@@ -59,25 +78,14 @@ export default function Register() {
           </Typography>
           <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
             <Grid container spacing={2}>
-              <Grid item xs={12} sm={6}>
-                <TextField
-                  autoComplete="given-name"
-                  name="firstName"
-                  required
-                  fullWidth
-                  id="firstName"
-                  label="First Name"
-                  autoFocus
-                />
-              </Grid>
-              <Grid item xs={12} sm={6}>
+              
+              <Grid item xs={12}>
                 <TextField
                   required
                   fullWidth
-                  id="lastName"
-                  label="Last Name"
-                  name="lastName"
-                  autoComplete="family-name"
+                  id="username"
+                  label="User Name"
+                  name="username"
                 />
               </Grid>
               <Grid item xs={12}>
@@ -98,6 +106,17 @@ export default function Register() {
                   label="Password"
                   type="password"
                   id="password"
+                  autoComplete="new-password"
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  required
+                  fullWidth
+                  name="password2"
+                  label="Password Confirmation"
+                  type="password"
+                  id="passwordConfirmation"
                   autoComplete="new-password"
                 />
               </Grid>
